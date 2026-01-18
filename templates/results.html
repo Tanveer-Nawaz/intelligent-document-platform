@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Analysis Results</h1>
+        <div class="document-info">
+            <h2>{{ results.filename }}</h2>
+            <p>Analyzed on: {{ results.timestamp }}</p>
+            <p>Total words: {{ results.statistics.total_words }}</p>
+        </div>
+        
+        <div class="results-grid">
+            <!-- Summaries Section -->
+            <div class="result-card">
+                <h3>📝 Executive Summary</h3>
+                <p>{{ results.summaries.executive }}</p>
+            </div>
+            
+            <div class="result-card">
+                <h3>📋 Detailed Summary</h3>
+                <p>{{ results.summaries.detailed }}</p>
+            </div>
+            
+            <!-- Entities Section -->
+            {% if results.entities %}
+            <div class="result-card">
+                <h3>🏷️ Extracted Entities</h3>
+                {% for entity_type, entities in results.entities.items() %}
+                    {% if entities %}
+                    <h4>{{ entity_type }}</h4>
+                    <ul>
+                        {% for entity in entities[:5] %}
+                            <li>{{ entity }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Insights Section -->
+            {% if results.insights %}
+            <div class="result-card">
+                <h3>💡 Actionable Insights</h3>
+                {% for insight_type, items in results.insights.items() %}
+                    {% if items %}
+                    <h4>{{ insight_type }}</h4>
+                    <ul>
+                        {% for item in items %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Search Section -->
+            <div class="result-card full-width">
+                <h3>🔍 Search Within Document</h3>
+                <div class="search-box">
+                    <input type="text" id="searchQuery" placeholder="Enter search term...">
+                    <button onclick="searchDocument()">Search</button>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/" class="btn">← Analyze Another Document</a>
+            <a href="/download/{{ document_id }}/json" class="btn">📥 Download JSON</a>
+            <a href="/download/{{ document_id }}/report" class="btn">📄 Download Report</a>
+        </div>
+    </div>
+    
+    <script>
+        function searchDocument() {
+            const query = document.getElementById('searchQuery').value;
+            if (!query) return;
+            
+            const documentId = window.location.pathname.split('/').pop();
+            const resultsDiv = document.getElementById('searchResults');
+            
+            resultsDiv.innerHTML = '<p>Searching...</p>';
+            
+            fetch(`/api/search/${documentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.matches && data.matches.length > 0) {
+                    let html = `<p>Found ${data.total_matches} matches:</p>`;
+                    data.matches.forEach(match => {
+                        html += `
+                            <div class="search-result">
+                                <strong>${match.type}: ${match.name || 'Chunk ' + match.index}</strong>
+                                <p>${match.content}</p>
+                            </div>
+                        `;
+                    });
+                    resultsDiv.innerHTML = html;
+                } else {
+                    resultsDiv.innerHTML = '<p>No matches found.</p>';
+                }
+            })
+            .catch(error => {
+                resultsDiv.innerHTML = '<p>Search failed.</p>';
+            });
+        }
+    </script>
+</body>
+</html>

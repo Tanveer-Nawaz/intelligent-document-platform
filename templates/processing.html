@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Analyzing Document...</h1>
+        <p>Processing: {{ filename }}</p>
+        
+        <div class="loading-animation">
+            <div class="spinner"></div>
+            <p>Please wait while we analyze your document</p>
+            <p>This may take a few moments...</p>
+        </div>
+        
+        <div class="progress-steps">
+            <div class="step active">1. Uploading</div>
+            <div class="step active">2. Extracting Text</div>
+            <div class="step">3. Analyzing Content</div>
+            <div class="step">4. Generating Summaries</div>
+            <div class="step">5. Ready!</div>
+        </div>
+    </div>
+    
+    <script>
+        // Automatically start analysis when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const documentId = window.location.pathname.split('/').pop();
+            
+            fetch(`/api/analyze/${documentId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert('Analysis failed: ' + data.error);
+                    window.location.href = '/';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Analysis failed. Please try again.');
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
+</html>

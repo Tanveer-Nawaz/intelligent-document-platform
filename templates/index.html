@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Analysis Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Intelligent Document Analysis</h1>
+        <p>Upload PDF or DOCX files for automatic analysis and summarization</p>
+        
+        <div class="upload-box">
+            <form id="uploadForm">
+                <input type="file" id="fileInput" accept=".pdf,.docx,.doc">
+                <button type="submit" id="uploadBtn">Analyze Document</button>
+            </form>
+            <div id="uploadStatus"></div>
+        </div>
+        
+        <div class="features">
+            <h2>Platform Features:</h2>
+            <ul>
+                <li>Automatic text extraction from PDF/DOCX</li>
+                <li>Smart document segmentation</li>
+                <li>Named entity recognition</li>
+                <li>Multiple summary types</li>
+                <li>Actionable insights extraction</li>
+                <li>Search within documents</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file first');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            const statusDiv = document.getElementById('uploadStatus');
+            
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+            statusDiv.innerHTML = '<p>Uploading file...</p>';
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.innerHTML = '<p style="color: green;">✓ File uploaded successfully! Processing...</p>';
+                    window.location.href = result.redirect;
+                } else {
+                    statusDiv.innerHTML = `<p style="color: red;">✗ Error: ${result.error}</p>`;
+                    uploadBtn.disabled = false;
+                    uploadBtn.textContent = 'Analyze Document';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: red;">✗ Upload failed: ${error}</p>`;
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Analyze Document';
+            }
+        });
+    </script>
+</body>
+</html>
