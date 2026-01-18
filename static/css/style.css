@@ -1,0 +1,259 @@
+/* Basic styling for the document platform */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+h2 {
+    color: #555;
+    margin: 20px 0 10px 0;
+}
+
+h3 {
+    color: #667eea;
+    margin: 15px 0 10px 0;
+}
+
+h4 {
+    color: #764ba2;
+    margin: 10px 0 5px 0;
+}
+
+/* Upload Box */
+.upload-box {
+    border: 3px dashed #667eea;
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    margin: 30px 0;
+    background: #f8f9ff;
+}
+
+#fileInput {
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+#uploadBtn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#uploadBtn:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+}
+
+#uploadBtn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Features List */
+.features {
+    background: #f0f4ff;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.features ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.features li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.features li:before {
+    content: "✓";
+    color: #667eea;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* Loading Animation */
+.loading-animation {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #667eea;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9ff;
+    border-radius: 10px;
+}
+
+.step {
+    padding: 10px 20px;
+    background: #ddd;
+    border-radius: 20px;
+    color: #666;
+}
+
+.step.active {
+    background: #667eea;
+    color: white;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.result-card {
+    background: #f8f9ff;
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 5px solid #667eea;
+}
+
+.result-card.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.search-box button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.search-result {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border-left: 4px solid #764ba2;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: #764ba2;
+    transform: translateY(-2px);
+}
+
+/* Document Info */
+.document-info {
+    background: #f0f4ff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+/* Status Messages */
+#uploadStatus, #searchResults {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        text-align: center;
+    }
+}
